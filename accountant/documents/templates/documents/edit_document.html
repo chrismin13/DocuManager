@@ -1,0 +1,17 @@
+{% extends "documents/base.html" %}
+
+{% block content %}
+    <h2>Edit Document - {{ document.title }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update Document</button>
+    </form>
+
+    <!-- Delete Button -->
+    {% if request.user == document.company.owner or request.user.is_staff %}
+        <a href="{% url 'delete_document' document.company.slug document.id %}" class="btn btn-danger">Delete Document</a>
+    {% endif %}
+
+    <a href="{% url 'company_detail' company.slug %}" class="btn btn-secondary">Back to {{ document.company.name }}</a>
+{% endblock %}
