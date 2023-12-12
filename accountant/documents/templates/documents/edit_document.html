@@ -10,7 +10,6 @@
 
     <!-- Delete Button -->
     {% if request.user == document.company.owner or request.user.is_staff %}
-        <a href="{% url 'delete_document' document.company.slug document.id %}" class="btn btn-danger">Delete Document</a>
     {% endif %}
 
     <a href="{% url 'company_detail' company.slug %}" class="btn btn-secondary">Back to {{ document.company.name }}</a>

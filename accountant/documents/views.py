@@ -42,7 +42,10 @@ def add_company(request):
 
 @login_required
 def edit_company(request, company_slug):
-    company = get_object_or_404(Company, slug=company_slug, owner=request.user)
+    if request.user.is_superuser:
+        company = get_object_or_404(Company, slug=company_slug)
+    else:
+        company = get_object_or_404(Company, slug=company_slug, owner=request.user)
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES, instance=company)
         if form.is_valid():
@@ -54,7 +57,10 @@ def edit_company(request, company_slug):
 
 @login_required
 def delete_company(request, company_slug):
-    company = get_object_or_404(Company, slug=company_slug, owner=request.user)
+    if request.user.is_superuser:
+        company = get_object_or_404(Company, slug=company_slug)
+    else:
+        company = get_object_or_404(Company, slug=company_slug, owner=request.user)
     if request.method == 'POST':
         company.delete()
         return redirect('company_list')
@@ -96,7 +102,10 @@ def profile(request):
 
 @login_required
 def add_document(request, company_slug):
-    company = get_object_or_404(Company, slug=company_slug, owner=request.user)
+    if request.user.is_superuser:
+        company = get_object_or_404(Company, slug=company_slug)
+    else:
+        company = get_object_or_404(Company, slug=company_slug, owner=request.user)
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -110,7 +119,10 @@ def add_document(request, company_slug):
 
 @login_required
 def edit_document(request, company_slug, document_id):
-    company = get_object_or_404(Company, slug=company_slug, owner=request.user)
+    if request.user.is_superuser:
+        company = get_object_or_404(Company, slug=company_slug)
+    else:
+        company = get_object_or_404(Company, slug=company_slug, owner=request.user)
     document = get_object_or_404(Document, id=document_id, company=company)
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES, instance=document)
@@ -124,7 +136,10 @@ def edit_document(request, company_slug, document_id):
 
 @login_required
 def delete_document(request, company_slug, document_id):
-    company = get_object_or_404(Company, slug=company_slug, owner=request.user)
+    if request.user.is_superuser:
+        company = get_object_or_404(Company, slug=company_slug, owner=request.user)
+    else:
+        company = get_object_or_404(Company, slug=company_slug, owner=request.user)
     document = get_object_or_404(Document, id=document_id, company=company)
     if request.method == 'POST':
         document.delete()
