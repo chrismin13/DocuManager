@@ -1,0 +1,19 @@
+{% extends "documents/base.html" %}
+{% block content %}
+    <h1>{{ company.name }}</h1>
+    <p>{{ company.description }}</p>
+    <!-- Display documents associated with the company -->
+    <h2>Documents</h2>
+    <ul>
+        {% for document in documents %}
+            <li>
+                <a href="{% url 'document_detail' company.slug document.year document.title %}">
+                    {{ document.title }} - {{ document.year }}
+                </a>
+            </li>
+        {% empty %}
+            <li>No documents available.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'company_list' %}">Back to Company List</a>
+{% endblock %}
