@@ -130,6 +130,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Fix embeds for documents
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 # FOR LOCAL DEVELOPMENT ONLY - WON'T AFFECT DEPLOYMENT
 # https://stackoverflow.com/questions/30579248/django-allowed-hosts-ok-to-include-localhost-on-a-deployed-settings-file
 RUNNING_DEVSERVER = len(os.sys.argv) > 1 and (
