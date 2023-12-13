@@ -2,15 +2,26 @@
 
 {% block content %}
     <h1>Search Results</h1>
-    <ul>
-        {% for document in documents %}
-            <li>
-                <a href="{% url 'document_detail' document.company.slug document.year document.slug %}">
-                    {{ document.title }} - {{ document.year }} - {{ document.company.name }}
-                </a>
-            </li>
-        {% empty %}
-            <li>No documents found.</li>
-        {% endfor %}
-    </ul>
+    {% if documents %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Year</th>
+                    <th>Company</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for document in documents %}
+                    <tr class="clickable-row" onclick="window.location='{% url 'document_detail' document.company.slug document.year document.slug %}';">
+                        <td>{{ document.title }}</td>
+                        <td>{{ document.year }}</td>
+                        <td>{{ document.company.name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No documents found.</p>
+    {% endif %}
 {% endblock %}
