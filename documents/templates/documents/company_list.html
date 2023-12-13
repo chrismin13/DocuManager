@@ -21,4 +21,29 @@
             </div>
         {% endfor %}
     </div>
+
+    <!-- Most Viewed Documents Section -->
+    {% if most_viewed_documents %}
+        <h2>Your Most Viewed Documents</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Year</th>
+                    <th>Document</th>
+                    <th>Views</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for view in most_viewed_documents %}
+                    <tr class="clickable-row" onclick="window.location='{% url 'document_detail' view.document.company.slug view.document.year view.document.title %}';">
+                        <td>{{ view.document.company.name }}</td>
+                        <td>{{ view.document.year }}</td>
+                        <td>{{ view.document.title }}</td>
+                        <td>{{ view.views }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}

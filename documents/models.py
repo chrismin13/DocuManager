@@ -51,3 +51,14 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.score} by {self.user.username} for {self.company.name}"
+    
+class DocumentView(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    views = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('user', 'document')
+
+    def __str__(self):
+        return f"{self.document.title} viewed by {self.user.username}"

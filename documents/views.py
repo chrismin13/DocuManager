@@ -1,13 +1,20 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from .models import Company, Document, Rating
+from .models import Company, Document, Rating, DocumentView
 from django.contrib.auth.decorators import login_required
 from .forms import CompanyForm, SignUpForm, UserEditForm, DocumentForm, RatingForm
-from django.db.models import Q, Avg
+from django.db.models import Q, Avg, F
 from django.contrib.auth import authenticate, login, logout
 
 def company_list(request):
     companies = Company.objects.all()
-    return render(request, 'documents/company_list.html', {'companies': companies})
+    most_viewed_documents = None
+    if request.user.is_authenticated:
+        most_viewed_documents = DocumentView.objects.filter(user=request.user).order_by('-views')[:5]
+    return render(request, 'documents/company_list.html', {
+        'companies': companies,
+        'most_viewed_documents': most_viewed_documents
+    })
+
 
 def company_detail(request, company_slug):
     company = get_object_or_404(Company, slug=company_slug)
@@ -34,7 +41,11 @@ def company_detail(request, company_slug):
 
 def document_detail(request, company_slug, year, document_title):
     document = get_object_or_404(Document, company__slug=company_slug, year=year, title=document_title)
+    if request.user.is_authenticated:
+        DocumentView.objects.get_or_create(user=request.user, document=document)
+        DocumentView.objects.filter(user=request.user, document=document).update(views=F('views') + 1)
     return render(request, 'documents/document_detail.html', {'document': document})
+
 
 def search_results(request):
     query = request.GET.get('query', '')
