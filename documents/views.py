@@ -1,8 +1,8 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from .models import Company, Document
+from .models import Company, Document, Rating
 from django.contrib.auth.decorators import login_required
-from .forms import CompanyForm, SignUpForm, UserEditForm, DocumentForm
-from django.db.models import Q
+from .forms import CompanyForm, SignUpForm, UserEditForm, DocumentForm, RatingForm
+from django.db.models import Q, Avg
 from django.contrib.auth import authenticate, login, logout
 
 def company_list(request):
@@ -12,7 +12,16 @@ def company_list(request):
 def company_detail(request, company_slug):
     company = get_object_or_404(Company, slug=company_slug)
     documents_by_year = Document.objects.filter(company=company).order_by('-year')
-    return render(request, 'documents/company_detail.html', {'company': company, 'documents': documents_by_year})
+    average_rating = company.ratings.aggregate(average_score=Avg('score'))['average_score']
+    # Keep average rating up to 2 decimal places
+    if average_rating:
+        average_rating = round(average_rating, 2)
+    return render(request, 'documents/company_detail.html', {
+        'company': company, 
+        'documents': documents_by_year, 
+        'average_rating': average_rating
+    })
+
 
 def document_detail(request, company_slug, year, document_title):
     document = get_object_or_404(Document, company__slug=company_slug, year=year, title=document_title)
@@ -145,4 +154,23 @@ def delete_document(request, company_slug, document_id):
         document.delete()
         return redirect('company_detail', company_slug=company.slug)
     return render(request, 'documents/confirm_delete_document.html', {'document': document, 'company': company})
+
+@login_required
+def submit_rating(request, company_slug):
+    company = get_object_or_404(Company, slug=company_slug)
+    if request.method == 'POST':
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            rating, created = Rating.objects.get_or_create(
+                company=company,
+                user=request.user,
+                defaults={'score': form.cleaned_data['score']}
+            )
+            if not created:
+                rating.score = form.cleaned_data['score']
+                rating.save()
+            return redirect('company_detail', company_slug=company_slug)
+    else:
+        form = RatingForm()
+    return render(request, 'documents/rate_company.html', {'form': form, 'company': company})
 

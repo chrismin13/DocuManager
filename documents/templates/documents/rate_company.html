@@ -1,0 +1,10 @@
+{% extends "documents/base.html" %}
+
+{% block content %}
+    <h2>Rate {{ company.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Rating</button>
+    </form>
+{% endblock %}

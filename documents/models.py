@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.text import slugify
 import os
 from datetime import datetime
+from django.contrib.auth.models import User
 
 class Company(models.Model):
     name = models.CharField(max_length=100)
@@ -39,3 +40,14 @@ class Document(models.Model):
 
     def __str__(self):
         return self.title
+
+class Rating(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('company', 'user')
+
+    def __str__(self):
+        return f"{self.score} by {self.user.username} for {self.company.name}"

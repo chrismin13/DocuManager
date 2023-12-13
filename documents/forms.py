@@ -1,5 +1,5 @@
 from django import forms
-from .models import Company, Document
+from .models import Company, Document, Rating
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -30,3 +30,11 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ['title', 'year', 'document']
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['score']
+        widgets = {
+            'score': forms.Select(choices=[(i, i) for i in range(1, 6)])
+        }

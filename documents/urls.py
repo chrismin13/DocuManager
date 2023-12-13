@@ -18,6 +18,7 @@ urlpatterns = [
     path('delete_company/<slug:company_slug>/', views.delete_company, name='delete_company'),
     # Document management from users
     path('company/<slug:company_slug>/add_document/', views.add_document, name='add_document'),
+    path('company/<slug:company_slug>/rate/', views.submit_rating, name='submit_rating'),
     path('company/<slug:company_slug>/edit_document/<int:document_id>/', views.edit_document, name='edit_document'),
     path('company/<slug:company_slug>/delete_document/<int:document_id>/', views.delete_document, name='delete_document'),
     # The following paths must be at the bottom of the list because they are more general than the ones above
