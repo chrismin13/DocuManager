@@ -56,8 +56,8 @@ def company_detail(request, company_slug):
     })
 
 
-def document_detail(request, company_slug, year, document_title):
-    document = get_object_or_404(Document, company__slug=company_slug, year=year, title=document_title)
+def document_detail(request, company_slug, year, document_slug):
+    document = get_object_or_404(Document, company__slug=company_slug, year=year, slug=document_slug)
     # Increment the view count if the user is logged in
     if request.user.is_authenticated:
         DocumentView.objects.get_or_create(user=request.user, document=document)

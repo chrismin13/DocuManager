@@ -41,7 +41,7 @@
             </thead>
             <tbody>
                 {% for view in most_viewed_documents %}
-                    <tr class="clickable-row" onclick="window.location='{% url 'document_detail' view.document.company.slug view.document.year view.document.title|slugify %}';">
+                    <tr class="clickable-row" onclick="window.location='{% url 'document_detail' view.document.company.slug view.document.year view.document.slug %}';">
                         <td>{{ view.document.company.name }}</td>
                         <td>{{ view.document.year }}</td>
                         <td>{{ view.document.title }}</td>

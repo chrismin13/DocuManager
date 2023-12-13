@@ -37,6 +37,13 @@ class Document(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     year = models.IntegerField()
     document = models.FileField(upload_to=document_upload_to)
+    slug = models.SlugField(unique=True, editable=False)  # Make slug not editable
+
+    def save(self, *args, **kwargs):
+        # Generate slug from the document title if it doesn't already exist
+        if not self.id:
+            self.slug = slugify(self.title)
+        super(Document, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title
