@@ -1,52 +1,69 @@
 {% extends "documents/base.html" %}
 {% block content %}
-    <h1>{{ company.name }}</h1>
-    <p>{{ company.description }}</p>
+    <a href="{% url 'company_list' %}" class="btn btn-secondary mb-3">Back to Company List</a>
+    <!-- Company Details -->
+    <div class="row">
+        <!-- Company Description -->
+        <div class="col-md-8">
+            <h1>
+                {{ company.name }} <!-- Edit and Delete Buttons -->
+                {% if request.user == company.owner or request.user.is_staff %}
+                    <a href="{% url 'edit_company' company.slug %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'delete_company' company.slug %}" class="btn btn-danger">Delete</a>
+                {% endif %}
+            </h1>
+            <p>{{ company.description }}</p>
 
-    <!-- Edit and Delete Buttons -->
-    {% if request.user == company.owner or request.user.is_staff %}
-        <a href="{% url 'edit_company' company.slug %}" class="btn btn-primary">Edit</a>
-        <a href="{% url 'delete_company' company.slug %}" class="btn btn-danger">Delete</a>
-    {% endif %}
+            <!-- Show user ratings -->
+            {% if average_rating %}
+                <p><b>Average Rating:</b> {{ average_rating }} / 5 from {{ rating_count }} reviews</p>
+            {% else %}
+                <p>Not rated yet</p>
+            {% endif %}
 
-    <!-- Show user ratings -->
-    {% if average_rating %}
-        <p>Average Rating: {{ average_rating }} from {{ rating_count }} reviews</p>
-    {% else %}
-        <p>Not rated yet</p>
-    {% endif %}
-    
-    <!-- Only show if user is logged in -->
-    {% if request.user.is_authenticated %}
-        {% if user_rating %}
-            <p>Your Rating: {{ user_rating.score }}/5</p>
-            <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Edit Your Rating</a>
-        {% else %}
-            <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Rate this Company</a>
-        {% endif %}
-    {% endif %}
-
-    <!-- Add Document Button -->
-    {% if request.user == company.owner or request.user.is_staff %}
-    <a href="{% url 'add_document' company.slug %}" class="btn btn-success">Add Document</a>
-    {% endif %}
-    <a href="{% url 'company_list' %}" class="btn btn-secondary">Back to Company List</a>
-
-    <!-- Document Filtering Form -->
-    <form method="get" class="mt-3 mb-2 d-flex align-items-center">
-        <div class="mr-2">
-            {{ filter_form.year.label_tag }}
-            {{ filter_form.year }}
+            <!-- Only show if user is logged in -->
+            {% if request.user.is_authenticated %}
+                {% if user_rating %}
+                    <p>
+                        <b>Your Rating:</b> {{ user_rating.score }}/5
+                        <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Edit Your Rating</a>
+                    </p>
+                {% else %}
+                    <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Rate this Company</a>
+                {% endif %}
+            {% endif %}
         </div>
-        <button type="submit" class="btn btn-primary mr-2">Filter</button>
-        {% if request.GET.year %}
-            <a href="{% url 'company_detail' company.slug %}" class="btn btn-secondary">Reset</a>
-        {% endif %}
-    </form>
+        <div class="col-md-4">
+            <!-- Show company logo -->
+            {% if company.logo %}
+                <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="img-fluid">
+            {% endif %}
+        </div>
+    </div>
 
     <!-- Display documents associated with the company -->
-    <h2>Documents</h2>
+    <h2 class="mt-3">
+        Documents
+        <!-- Add Document Button -->
+        {% if request.user == company.owner or request.user.is_staff %}
+            <a href="{% url 'add_document' company.slug %}" class="btn btn-success">Add Document</a>
+        {% endif %}
+    </h2>
+    
     {% if documents %}
+
+        <!-- Document Filtering Form -->
+        <form method="get" class="mt-3 mb-2 d-flex align-items-center">
+            <div class="mr-2">
+                {{ filter_form.year.label_tag }}
+                {{ filter_form.year }}
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Filter</button>
+            {% if request.GET.year %}
+                <a href="{% url 'company_detail' company.slug %}" class="btn btn-secondary">Reset</a>
+            {% endif %}
+        </form>
+
         <table class="table">
             <thead>
                 <tr>

@@ -1,16 +1,21 @@
 {% extends "documents/base.html" %}
 
 {% block content %}
-    <h1>{{ document.title }}</h1>
+    <a href="{% url 'company_detail' document.company.slug %}" class="btn btn-secondary mb-3">Back to {{ document.company.name }}</a>    
+    <h1>
+        {{ document.title }}
+        <!-- Edit and Delete Buttons -->
+        {% if request.user == document.company.owner or request.user.is_staff %}
+            <a href="{% url 'edit_document' document.company.slug document.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'delete_document' document.company.slug document.id %}" class="btn btn-danger">Delete</a>
+        {% endif %}
+    </h1>
+
     <p>Year: {{ document.year }}</p>
+    
     <!-- Embed PDF Document -->
     <iframe src="{{ document.document.url }}" width="100%" height="600px"></iframe>
+    
+    <br>
 
-    <!-- Edit and Delete Buttons -->
-    {% if request.user == document.company.owner or request.user.is_staff %}
-        <a href="{% url 'edit_document' document.company.slug document.id %}" class="btn btn-primary">Edit</a>
-        <a href="{% url 'delete_document' document.company.slug document.id %}" class="btn btn-danger">Delete</a>
-    {% endif %}
-
-    <a href="{% url 'company_detail' document.company.slug %}" class="btn btn-secondary">Back to {{ document.company.name }}</a>
 {% endblock %}
