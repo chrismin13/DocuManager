@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-cfrhsjxgejrt(k0b!=z@p8pk#6-)mg5fc)@ozjh3o=e@u-&ra5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app']
 
 
 # Application definition
@@ -130,5 +130,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # REMOVE WHEN DEPLOYING
-X_FRAME_OPTIONS = 'ALLOWALL'
-XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+# X_FRAME_OPTIONS = 'ALLOWALL'
+# XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
