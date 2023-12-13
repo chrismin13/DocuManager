@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-cfrhsjxgejrt(k0b!=z@p8pk#6-)mg5fc)@ozjh3o=e@u-&ra5"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['cminiotis.pythonanywhere.com']
 
@@ -129,6 +129,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# REMOVE WHEN DEPLOYING
-# X_FRAME_OPTIONS = 'ALLOWALL'
-# XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+# FOR LOCAL DEVELOPMENT ONLY - WON'T AFFECT DEPLOYMENT
+# https://stackoverflow.com/questions/30579248/django-allowed-hosts-ok-to-include-localhost-on-a-deployed-settings-file
+RUNNING_DEVSERVER = len(os.sys.argv) > 1 and (
+    os.sys.argv[1] == "runserver" or os.sys.argv[1] == "runserver_plus"
+)
+
+if RUNNING_DEVSERVER:
+    DEBUG = True
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    X_FRAME_OPTIONS = 'ALLOWALL'
+    XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
