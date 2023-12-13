@@ -38,3 +38,6 @@ class RatingForm(forms.ModelForm):
         widgets = {
             'score': forms.Select(choices=[(i, i) for i in range(1, 6)])
         }
+
+class DocumentFilterForm(forms.Form):
+    year = forms.ChoiceField(choices=[])  # Initially empty, will be set in the view

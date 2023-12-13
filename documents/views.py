@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Company, Document, Rating, DocumentView
 from django.contrib.auth.decorators import login_required
-from .forms import CompanyForm, SignUpForm, UserEditForm, DocumentForm, RatingForm
+from .forms import CompanyForm, DocumentFilterForm, SignUpForm, UserEditForm, DocumentForm, RatingForm
 from django.db.models import Q, Avg, F
 from django.contrib.auth import authenticate, login, logout
 
@@ -18,7 +18,22 @@ def company_list(request):
 
 def company_detail(request, company_slug):
     company = get_object_or_404(Company, slug=company_slug)
+    available_years = Document.objects.filter(company=company).values_list('year', flat=True).distinct()
+    
+    # Initialize form with no initial year selected
+    filter_form = DocumentFilterForm(request.GET or None)
+    filter_form.fields['year'].choices = [('', '---------')] + [(year, year) for year in available_years]
+
+    # Filter documents by year
     documents_by_year = Document.objects.filter(company=company).order_by('-year')
+    if request.GET.get('year'):
+        documents_by_year = documents_by_year.filter(year=request.GET.get('year'))
+    if filter_form.is_valid():
+        year = filter_form.cleaned_data.get('year')
+        if year:
+            documents_by_year = documents_by_year.filter(year=year)
+    
+    # Calculate average rating and rating count
     average_rating = company.ratings.aggregate(average_score=Avg('score'))['average_score']
     rating_count = company.ratings.count()
     
@@ -35,7 +50,8 @@ def company_detail(request, company_slug):
         'documents': documents_by_year, 
         'average_rating': average_rating,
         'rating_count': rating_count,
-        'user_rating': user_rating
+        'user_rating': user_rating,
+        'filter_form': filter_form
     })
 
 
