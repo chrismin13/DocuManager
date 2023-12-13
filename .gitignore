@@ -3,7 +3,7 @@
 *.log
 *.pot
 *.pyc
-**/__pycache__
+accountant/__pycache__/**
 # Including the database for testing purposes, will remove when website is fully deployed.
 # db.sqlite3
 media

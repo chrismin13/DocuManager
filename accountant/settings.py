@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-cfrhsjxgejrt(k0b!=z@p8pk#6-)mg5fc)@ozjh3o=e@u-&ra5"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['cminiotis.pythonanywhere.com']
 
@@ -118,6 +118,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static") # For deployment
 
 # Media files - NEEDED FOR THE DOCUMENT UPLOADS
 MEDIA_URL = '/media/'
