@@ -77,7 +77,7 @@
             </thead>
             <tbody>
                 {% for document in documents %}
-                    <tr class="clickable-row" onclick="window.location='{% url 'document_detail' company.slug document.year document.title %}';">
+                    <tr class="clickable-row" onclick="window.location='{% url 'document_detail' company.slug document.year document.title|slugify %}';">
                         <td>{{ document.title }}</td>
                         <td>{{ document.year }}</td>
                     </tr>
