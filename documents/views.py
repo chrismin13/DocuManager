@@ -13,13 +13,22 @@ def company_detail(request, company_slug):
     company = get_object_or_404(Company, slug=company_slug)
     documents_by_year = Document.objects.filter(company=company).order_by('-year')
     average_rating = company.ratings.aggregate(average_score=Avg('score'))['average_score']
+    rating_count = company.ratings.count()
+    
+    # Check if the user has already rated the company
+    user_rating = None
+    if request.user.is_authenticated:
+        user_rating = Rating.objects.filter(company=company, user=request.user).first()
+
     # Keep average rating up to 2 decimal places
     if average_rating:
         average_rating = round(average_rating, 2)
     return render(request, 'documents/company_detail.html', {
         'company': company, 
         'documents': documents_by_year, 
-        'average_rating': average_rating
+        'average_rating': average_rating,
+        'rating_count': rating_count,
+        'user_rating': user_rating
     })
 
 

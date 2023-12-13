@@ -10,11 +10,22 @@
     {% endif %}
 
     <!-- Show user ratings -->
-    <p>Average Rating: {{ average_rating|default:"Not rated yet" }}</p>
+    {% if average_rating %}
+        <p>Average Rating: {{ average_rating }} out of {{ rating_count }} reviews</p>
+    {% else %}
+        <p>Not rated yet</p>
+    {% endif %}
+    
     <!-- Only show if user is logged in -->
     {% if request.user.is_authenticated %}
-        <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Rate this company</a>
+        {% if user_rating %}
+            <p>Your Rating: {{ user_rating.score }}/5</p>
+            <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Edit Your Rating</a>
+        {% else %}
+            <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Rate this Company</a>
+        {% endif %}
     {% endif %}
+
 
     <!-- Display documents associated with the company -->
     <h2>Documents</h2>
