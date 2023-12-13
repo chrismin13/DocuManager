@@ -1,7 +1,12 @@
 {% extends "documents/base.html" %}
 
 {% block content %}
-    <h1>Companies</h1>
+    <h1>
+        Companies
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'add_company' %}" class="btn btn-success">Add Company</a>
+        {% endif %}
+    </h1>
     <div class="row">
         {% for company in companies %}
             <div class="col-md-4 mb-4">

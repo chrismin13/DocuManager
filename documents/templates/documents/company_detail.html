@@ -14,6 +14,8 @@
             </h1>
             <p>{{ company.description }}</p>
 
+            <hr>
+
             <!-- Show user ratings -->
             {% if average_rating %}
                 <p><b>Average Rating:</b> {{ average_rating }} / 5 from {{ rating_count }} reviews</p>
@@ -26,20 +28,22 @@
                 {% if user_rating %}
                     <p>
                         <b>Your Rating:</b> {{ user_rating.score }}/5
-                        <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Edit Your Rating</a>
+                        <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary mb-3">Edit Your Rating</a>
                     </p>
                 {% else %}
-                    <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary">Rate this Company</a>
+                    <a href="{% url 'submit_rating' company.slug %}" class="btn btn-primary mb-3">Rate this Company</a>
                 {% endif %}
             {% endif %}
         </div>
         <div class="col-md-4">
             <!-- Show company logo -->
             {% if company.logo %}
-                <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="img-fluid">
+            <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="img-fluid">
             {% endif %}
         </div>
     </div>
+    
+    <hr>
 
     <!-- Display documents associated with the company -->
     <h2 class="mt-3">
